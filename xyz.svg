@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <foreignObject x="0" y="0">
+    <body onload="alert('XSS')">
+      Test
+    </body>
+  </foreignObject>
+</svg>
