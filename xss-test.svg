@@ -1,15 +1,7 @@
-<?xml version="1.0"?>
-<svg xmlns="http://www.w3.org/2000/svg" width=400 height=300>
-<rect width=400 height=300 fill=#f0f0f0/>
-<text x=10 y=20 fill=#666 font-size=12>✓ Secure</text>
-
-<!-- CRITICAL: Unquoted template literal (breaks XML, executes JS) -->
-<animate attributeName=opacity onbegin=alert`XSS` dur=1s values=1 0/>
-
-<!-- Multiple XML-safe fallbacks -->
-<script>//<![CDATA[
-/* */alert('XSS')
-//]]></script>
-
-<style>svg{onload:expression(alert('XSS'))}</style>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+  <script type="text/javascript">
+    // This is where a script would reside
+    console.log("SVG script executed for educational demonstration." );
+  </script>
 </svg>
